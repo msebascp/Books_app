@@ -38,6 +38,7 @@ android {
 	}
 	buildFeatures {
 		compose = true
+		viewBinding = true
 	}
 	composeOptions {
 		kotlinCompilerExtensionVersion = "1.5.1"
@@ -66,4 +67,27 @@ dependencies {
 	androidTestImplementation(libs.androidx.ui.test.junit4)
 	debugImplementation(libs.androidx.ui.tooling)
 	debugImplementation(libs.androidx.ui.test.manifest)
+
+	//Retrofit
+	implementation("com.squareup.retrofit2:retrofit:2.9.0")
+	implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+	implementation("com.google.code.gson:gson:2.10.1")
+
+	// ViewModel
+	implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+
+	// LiveData
+	implementation("androidx.lifecycle:lifecycle-livedata:2.7.0")
+	implementation("androidx.compose.runtime:runtime-livedata:1.6.6")
+
+	// Coil
+	implementation("io.coil-kt:coil-compose:2.4.0")
+
+	//Navigation
+	implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+	implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+	implementation("androidx.navigation:navigation-compose:2.7.7")
+
+	// Iconos extra
+	implementation("androidx.compose.material:material-icons-extended:1.6.6")
 }
