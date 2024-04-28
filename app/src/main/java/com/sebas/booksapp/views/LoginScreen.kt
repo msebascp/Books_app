@@ -1,5 +1,6 @@
 package com.sebas.booksapp.views
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,53 +10,65 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.sebas.booksapp.R.drawable.icon_books
 import com.sebas.booksapp.viewmodels.LoginViewModel
 import com.sebas.booksapp.views.components.EmailTextField
 import com.sebas.booksapp.views.components.PasswordTextField
-import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
 	Box(
 		Modifier.fillMaxSize()
 	) {
-		Login(Modifier.align(Alignment.Center), viewModel)
+		Login(Modifier.align(Alignment.Center), loginViewModel, navController)
 	}
 }
 
 @Composable
-fun Login(modifier: Modifier = Modifier, viewModel: LoginViewModel) {
-	val email: String by viewModel.email.observeAsState("")
-	val password: String by viewModel.password.observeAsState("")
-	val loginEnabled: Boolean by viewModel.loginEnabled.observeAsState(false)
-	val passwordVisible: Boolean by viewModel.passwordVisible.observeAsState(false)
-	val coroutineScope = rememberCoroutineScope()
+fun Login(
+	modifier: Modifier = Modifier,
+	loginViewModel: LoginViewModel,
+	navController: NavController
+) {
+	val email: String by loginViewModel.email.observeAsState("")
+	val password: String by loginViewModel.password.observeAsState("")
+	val loginEnabled: Boolean by loginViewModel.loginEnabled.observeAsState(false)
+	val passwordVisible: Boolean by loginViewModel.passwordVisible.observeAsState(false)
+	val loginError: Boolean by loginViewModel.loginError.observeAsState(false)
 
 	Column(
-		modifier = modifier.padding(horizontal = 16.dp),
+		modifier = modifier
+			.padding(horizontal = 16.dp)
+			.statusBarsPadding()
+			.verticalScroll(rememberScrollState())
+			.safeDrawingPadding(),
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.spacedBy(16.dp)
 	) {
 		IconApp()
-		EmailTextField(email) { viewModel.onLoginChange(it, password) }
+		EmailTextField(email) { loginViewModel.onLoginChange(it, password) }
 		PasswordTextField(
 			password,
 			passwordVisible,
-			{ viewModel.onLoginChange(email, it) },
-			{ viewModel.onPasswordVisibleChange(!passwordVisible) }
+			{ loginViewModel.onLoginChange(email, it) },
+			{ loginViewModel.onPasswordVisibleChange(!passwordVisible) }
 		)
 		Row(
 			modifier = Modifier.fillMaxWidth(),
@@ -65,10 +78,12 @@ fun Login(modifier: Modifier = Modifier, viewModel: LoginViewModel) {
 			ForgotPassword()
 		}
 		LoginButton(loginEnabled) {
-			coroutineScope.launch {
-				viewModel.login()
-			}
+			loginViewModel.login(navController)
 		}
+	}
+	if (loginError) {
+		Toast.makeText(LocalContext.current, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
+		loginViewModel.changeLoginError()
 	}
 }
 
@@ -103,8 +118,12 @@ fun LoginButton(loginEnabled: Boolean, onLoginClick: () -> Unit) {
 	}
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-	LoginScreen(viewModel = LoginViewModel())
+	LoginScreen(
+		loginViewModel = LoginViewModel(),
+		navController = NavController(LocalContext.current)
+	)
 }

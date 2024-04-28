@@ -1,10 +1,18 @@
 package com.sebas.booksapp.viewmodels
 
+import android.util.Log
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import com.sebas.booksapp.network.ApiRepository
+import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
+	private val repository = ApiRepository()
+
 	private var _email = MutableLiveData<String>()
 	val email: LiveData<String> get() = _email
 
@@ -17,6 +25,9 @@ class LoginViewModel : ViewModel() {
 	private var _passwordVisible = MutableLiveData<Boolean>()
 	val passwordVisible: LiveData<Boolean> get() = _passwordVisible
 
+	private var _loginError = MutableLiveData<Boolean>()
+	var loginError: LiveData<Boolean> = _loginError
+
 	fun onLoginChange(email: String, password: String) {
 		_email.value = email
 		_password.value = password
@@ -24,7 +35,7 @@ class LoginViewModel : ViewModel() {
 	}
 
 	private fun isEmailValid(email: String): Boolean {
-		return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+		return Patterns.EMAIL_ADDRESS.matcher(email).matches()
 	}
 
 	private fun isPasswordValid(password: String): Boolean {
@@ -35,7 +46,20 @@ class LoginViewModel : ViewModel() {
 		_passwordVisible.value = passwordVisible
 	}
 
-	fun login() {
-		// TODO
+	fun changeLoginError() {
+		_loginError.value = false
+	}
+
+	fun login(navController: NavController) {
+		viewModelScope.launch {
+			try {
+				val response = repository.login(_email.value ?: "", _password.value ?: "")
+				Log.d("LoginViewModel", "Login finished with response: $response")
+				navController.navigate("popularBooksScreen")
+			} catch (e: Exception) {
+				Log.e("LoginViewModel", "Login failed with exception: $e")
+				_loginError.value = true
+			}
+		}
 	}
 }

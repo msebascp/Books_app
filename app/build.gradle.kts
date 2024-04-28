@@ -90,4 +90,7 @@ dependencies {
 
 	// Iconos extra
 	implementation("androidx.compose.material:material-icons-extended:1.6.6")
+
+	// Pantalla
+	implementation("androidx.activity:activity-compose:1.9.0")
 }
