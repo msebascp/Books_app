@@ -6,11 +6,12 @@ import com.sebas.booksapp.models.responses.LoginResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ApiInterface {
 	@GET("books")
-	suspend fun getBooks(): BooksResponse
+	suspend fun getBooks(@Header("Authorization") token: String): BooksResponse
 
 	@POST("login")
 	suspend fun login(@Body request: LoginRequest): LoginResponse

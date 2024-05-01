@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.sebas.booksapp.AuthStore
 import com.sebas.booksapp.R.drawable.icon_books
 import com.sebas.booksapp.viewmodels.LoginViewModel
 import com.sebas.booksapp.views.components.EmailTextField
@@ -52,6 +53,7 @@ fun Login(
 	val loginEnabled: Boolean by loginViewModel.loginEnabled.observeAsState(false)
 	val passwordVisible: Boolean by loginViewModel.passwordVisible.observeAsState(false)
 	val loginError: Boolean by loginViewModel.loginError.observeAsState(false)
+	val context = LocalContext.current
 
 	Column(
 		modifier = modifier
@@ -78,7 +80,7 @@ fun Login(
 			ForgotPassword()
 		}
 		LoginButton(loginEnabled) {
-			loginViewModel.login(navController)
+			loginViewModel.login(navController, context)
 		}
 	}
 	if (loginError) {

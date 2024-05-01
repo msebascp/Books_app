@@ -1,7 +1,9 @@
 package com.sebas.booksapp.viewmodels
 
+import android.content.Context
 import android.util.Log
 import android.util.Patterns
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -50,7 +52,8 @@ class LoginViewModel : ViewModel() {
 		_loginError.value = false
 	}
 
-	fun login(navController: NavController) {
+	fun login(navController: NavController, context: Context) {
+		val USER_TOKEN_KEY = stringPreferencesKey("user_token")
 		viewModelScope.launch {
 			try {
 				val response = repository.login(_email.value ?: "", _password.value ?: "")

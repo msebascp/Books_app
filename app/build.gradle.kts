@@ -1,6 +1,8 @@
 plugins {
 	alias(libs.plugins.androidApplication)
 	alias(libs.plugins.jetbrainsKotlinAndroid)
+	id("kotlin-kapt")
+	id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -91,6 +93,14 @@ dependencies {
 	// Iconos extra
 	implementation("androidx.compose.material:material-icons-extended:1.6.6")
 
-	// Pantalla
+	// Pantalla extendida
 	implementation("androidx.activity:activity-compose:1.9.0")
+
+	// Datastore
+	implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+	// Dagger Hilt
+	implementation("com.google.dagger:hilt-android:2.47")
+	kapt("com.google.dagger:hilt-android-compiler:2.47")
+	implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
