@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.sebas.booksapp.AuthStore
 import com.sebas.booksapp.R.drawable.icon_books
 import com.sebas.booksapp.viewmodels.LoginViewModel
 import com.sebas.booksapp.views.components.EmailTextField
@@ -35,6 +34,7 @@ import com.sebas.booksapp.views.components.PasswordTextField
 
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
+	loginViewModel.checkToken(navController, LocalContext.current)
 	Box(
 		Modifier.fillMaxSize()
 	) {
@@ -84,7 +84,7 @@ fun Login(
 		}
 	}
 	if (loginError) {
-		Toast.makeText(LocalContext.current, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
+		Toast.makeText(context, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
 		loginViewModel.changeLoginError()
 	}
 }

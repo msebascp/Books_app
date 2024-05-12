@@ -1,9 +1,8 @@
 package com.sebas.booksapp.network
 
+import com.sebas.booksapp.models.BooksResponse
 import com.sebas.booksapp.models.LoginRequest
-import com.sebas.booksapp.models.responses.BooksResponse
-import com.sebas.booksapp.models.responses.LoginResponse
-import retrofit2.Response
+import com.sebas.booksapp.models.LoginResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -15,4 +14,7 @@ interface ApiInterface {
 
 	@POST("login")
 	suspend fun login(@Body request: LoginRequest): LoginResponse
+
+	@GET("check_token")
+	suspend fun checkToken(@Header("Authorization") token: String): LoginResponse
 }

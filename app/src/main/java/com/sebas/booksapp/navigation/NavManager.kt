@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.sebas.booksapp.viewmodels.LoginViewModel
 import com.sebas.booksapp.views.LoginScreen
 import com.sebas.booksapp.views.PopularBooksScreen
 
@@ -17,7 +16,7 @@ fun NavManager() {
 			LoginScreen(navController)
 		}
 		composable("popularBooksScreen") {
-			PopularBooksScreen()
+			PopularBooksScreen(navController)
 		}
 	}
 }

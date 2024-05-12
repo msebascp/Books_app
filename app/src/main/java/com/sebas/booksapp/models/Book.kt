@@ -1,4 +1,4 @@
-package com.sebas.booksapp.models.responses
+package com.sebas.booksapp.models
 
 data class Book(
 	val authors: List<Author>,

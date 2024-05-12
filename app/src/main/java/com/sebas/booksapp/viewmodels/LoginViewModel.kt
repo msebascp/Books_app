@@ -3,12 +3,12 @@ package com.sebas.booksapp.viewmodels
 import android.content.Context
 import android.util.Log
 import android.util.Patterns
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.sebas.booksapp.AuthStore
 import com.sebas.booksapp.network.ApiRepository
 import kotlinx.coroutines.launch
 
@@ -53,16 +53,33 @@ class LoginViewModel : ViewModel() {
 	}
 
 	fun login(navController: NavController, context: Context) {
-		val USER_TOKEN_KEY = stringPreferencesKey("user_token")
 		viewModelScope.launch {
 			try {
 				val response = repository.login(_email.value ?: "", _password.value ?: "")
 				Log.d("LoginViewModel", "Login finished with response: $response")
+				AuthStore.saveToken(response.token, context)
+				val token = AuthStore.getToken(context)
+				Log.d("LoginViewModel", "El token es: $token")
 				navController.navigate("popularBooksScreen")
 			} catch (e: Exception) {
 				Log.e("LoginViewModel", "Login failed with exception: $e")
 				_loginError.value = true
 			}
+		}
+	}
+
+	fun checkToken(navController: NavController, context: Context) {
+		viewModelScope.launch {
+			try {
+				val token = AuthStore.getToken(context)
+				val response = repository.checkToken(token)
+				if (response.success) {
+					navController.navigate("popularBooksScreen")
+				}
+			} catch (e: Exception) {
+				Log.e("LoginViewModel", "Check token failed with exception: $e")
+			}
+
 		}
 	}
 }

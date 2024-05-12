@@ -1,8 +1,6 @@
 plugins {
 	alias(libs.plugins.androidApplication)
 	alias(libs.plugins.jetbrainsKotlinAndroid)
-	id("kotlin-kapt")
-	id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -98,9 +96,4 @@ dependencies {
 
 	// Datastore
 	implementation("androidx.datastore:datastore-preferences:1.0.0")
-
-	// Dagger Hilt
-	implementation("com.google.dagger:hilt-android:2.47")
-	kapt("com.google.dagger:hilt-android-compiler:2.47")
-	implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }
