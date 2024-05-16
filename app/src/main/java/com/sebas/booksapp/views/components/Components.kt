@@ -1,27 +1,37 @@
 package com.sebas.booksapp.views.components
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.sebas.booksapp.models.Book
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -81,21 +91,63 @@ fun PasswordVisibleIcon(passwordVisible: Boolean, onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController: NavController) {
-	val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-	val scope = rememberCoroutineScope()
+fun TopBar(
+	navController: NavController,
+	drawerState: DrawerState,
+	scope: CoroutineScope,
+	goBack: Boolean = false,
+	title: String = ""
+) {
 	TopAppBar(
 		title = {
-			Text(text = "Libros populares")
+			Text(text = title)
 		},
 		navigationIcon = {
-			IconButton(onClick = { scope.launch { drawerState.open() } }) {
-				Icon(
-					imageVector = Icons.Default.Menu,
-					contentDescription = "Open drawer"
-				)
+			if (goBack) {
+				IconButton(onClick = { navController.popBackStack() }) {
+					Icon(
+						imageVector = Icons.AutoMirrored.Default.ArrowBack,
+						contentDescription = "Go back"
+					)
+				}
+			} else {
+				IconButton(onClick = { scope.launch { drawerState.open() } }) {
+					Icon(
+						imageVector = Icons.Default.Menu,
+						contentDescription = "Open drawer"
+					)
+				}
 			}
 		}
 	)
 }
+
+@Composable
+fun CardImageBook(navController: NavController, book: Book) {
+	AsyncImage(
+		model = book.image_path, contentDescription = "Image of book",
+		modifier = Modifier
+			.padding(8.dp)
+			.clickable(
+				onClick = {
+					navController.navigate("bookDetailScreen/${book.id}")
+				}
+			)
+	)
+}
+
+@Composable
+fun LoadingScreen() {
+	Column(
+		modifier = Modifier
+			.fillMaxHeight()
+			.fillMaxWidth(),
+		verticalArrangement = Arrangement.Center,
+		horizontalAlignment = Alignment.CenterHorizontally
+	) {
+		CircularProgressIndicator()
+	}
+}
+
+
 

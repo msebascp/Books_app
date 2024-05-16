@@ -1,8 +1,6 @@
 package com.sebas.booksapp.models
 
 data class Book(
-	val authors: List<Author>,
-	val categories: List<Category>,
 	val created_at: String,
 	val description: String,
 	val id: Int,

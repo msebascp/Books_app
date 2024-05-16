@@ -30,6 +30,9 @@ class LoginViewModel : ViewModel() {
 	private var _loginError = MutableLiveData<Boolean>()
 	var loginError: LiveData<Boolean> = _loginError
 
+	private var _isLoading = MutableLiveData<Boolean>()
+	val isLoading: LiveData<Boolean> get() = _isLoading
+
 	fun onLoginChange(email: String, password: String) {
 		_email.value = email
 		_password.value = password
@@ -64,6 +67,8 @@ class LoginViewModel : ViewModel() {
 			} catch (e: Exception) {
 				Log.e("LoginViewModel", "Login failed with exception: $e")
 				_loginError.value = true
+			} finally {
+				_isLoading.value = false
 			}
 		}
 	}
@@ -78,6 +83,8 @@ class LoginViewModel : ViewModel() {
 				}
 			} catch (e: Exception) {
 				Log.e("LoginViewModel", "Check token failed with exception: $e")
+			} finally {
+				_isLoading.value = false
 			}
 
 		}

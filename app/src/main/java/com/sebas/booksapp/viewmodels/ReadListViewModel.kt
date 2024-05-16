@@ -1,6 +1,7 @@
 package com.sebas.booksapp.viewmodels
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,23 +11,23 @@ import com.sebas.booksapp.models.Book
 import com.sebas.booksapp.network.ApiRepository
 import kotlinx.coroutines.launch
 
-class PopularBooksViewModel() : ViewModel() {
+class ReadListViewModel : ViewModel() {
 	private val repository = ApiRepository()
 
 	private val _books = MutableLiveData<List<Book>>()
-	val books: LiveData<List<Book>> get() = _books
+	val books: MutableLiveData<List<Book>> get() = _books
 
 	private val _isLoading = MutableLiveData<Boolean>()
 	val isLoading: LiveData<Boolean> get() = _isLoading
 
-	fun getBooks(context: Context) {
+	fun getReadList(context: Context) {
 		viewModelScope.launch {
 			try {
 				val token = AuthStore.getToken(context)
-				val response = repository.getBooks(token)
+				val response = repository.getReadList(token)
 				_books.value = response.data
 			} catch (e: Exception) {
-				_books.value = emptyList()
+				Log.e("ReadListViewModel", "Error getting read list", e)
 			} finally {
 				_isLoading.value = false
 			}

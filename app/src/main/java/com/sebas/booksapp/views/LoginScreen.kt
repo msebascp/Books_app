@@ -3,11 +3,10 @@ package com.sebas.booksapp.views
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -30,15 +29,19 @@ import androidx.navigation.NavController
 import com.sebas.booksapp.R.drawable.icon_books
 import com.sebas.booksapp.viewmodels.LoginViewModel
 import com.sebas.booksapp.views.components.EmailTextField
+import com.sebas.booksapp.views.components.LoadingScreen
 import com.sebas.booksapp.views.components.PasswordTextField
 
 @Composable
-fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
+fun LoginScreen(
+	navController: NavController, loginViewModel: LoginViewModel = viewModel()
+) {
 	loginViewModel.checkToken(navController, LocalContext.current)
-	Box(
-		Modifier.fillMaxSize()
-	) {
-		Login(Modifier.align(Alignment.Center), loginViewModel, navController)
+	val isLoading = loginViewModel.isLoading.observeAsState(true)
+	if (isLoading.value) {
+		LoadingScreen()
+	} else {
+		Login(loginViewModel = loginViewModel, navController = navController)
 	}
 }
 
@@ -57,6 +60,7 @@ fun Login(
 
 	Column(
 		modifier = modifier
+			.fillMaxHeight()
 			.padding(horizontal = 16.dp)
 			.statusBarsPadding()
 			.verticalScroll(rememberScrollState())

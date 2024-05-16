@@ -18,40 +18,39 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sebas.booksapp.models.Book
-import com.sebas.booksapp.viewmodels.PopularBooksViewModel
+import com.sebas.booksapp.viewmodels.ReadListViewModel
 import com.sebas.booksapp.views.components.CardImageBook
 import com.sebas.booksapp.views.components.LoadingScreen
 import com.sebas.booksapp.views.components.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PopularBooksScreen(
+fun ReadListScreen(
 	drawerState: DrawerState,
 	navController: NavController,
-	popularBooksViewModel: PopularBooksViewModel = viewModel(),
+	readListViewModel: ReadListViewModel = viewModel(),
 ) {
-	popularBooksViewModel.getBooks(LocalContext.current)
-	val isLoading by popularBooksViewModel.isLoading.observeAsState(true)
-	val books by popularBooksViewModel.books.observeAsState(emptyList())
+	readListViewModel.getReadList(LocalContext.current)
+	val isLoading by readListViewModel.isLoading.observeAsState(true)
+	val books by readListViewModel.books.observeAsState(emptyList())
 	val scope = rememberCoroutineScope()
-
 
 	Scaffold(
 		topBar = {
-			TopBar(navController = navController, drawerState, scope, title = "Libros Populares")
+			TopBar(navController = navController, drawerState, scope, goBack = true)
 		},
 		content = { paddingValues ->
 			if (isLoading) {
 				LoadingScreen()
 			} else {
-				PopularBooksGrid(books, paddingValues, navController)
+				ReadListGrid(books, paddingValues, navController)
 			}
 		},
 	)
 }
 
 @Composable
-fun PopularBooksGrid(
+fun ReadListGrid(
 	books: List<Book>,
 	paddingValues: PaddingValues,
 	navController: NavController
