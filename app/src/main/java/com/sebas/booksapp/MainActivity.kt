@@ -94,17 +94,26 @@ fun Menu(drawerState: DrawerState, navController: NavHostController) {
 		NavigationDrawerItem(
 			label = { Text(text = "Por leer") },
 			selected = false,
-			onClick = { /*TODO*/ }
+			onClick = {
+				navController.navigate("watchListScreen")
+				scope.launch { drawerState.close() }
+			}
 		)
 		NavigationDrawerItem(
 			label = { Text(text = "Colección") },
 			selected = false,
-			onClick = { /*TODO*/ }
+			onClick = {
+				navController.navigate("collectionListScreen")
+				scope.launch { drawerState.close() }
+			}
 		)
 		NavigationDrawerItem(
 			label = { Text(text = "Reseñas") },
 			selected = false,
-			onClick = { /*TODO*/ }
+			onClick = {
+				navController.navigate("reviewsScreen")
+				scope.launch { drawerState.close() }
+			}
 		)
 		NavigationDrawerItem(
 			label = { Text(text = "Configuración") },

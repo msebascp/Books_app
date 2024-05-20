@@ -10,7 +10,7 @@ import com.sebas.booksapp.models.Book
 import com.sebas.booksapp.network.ApiRepository
 import kotlinx.coroutines.launch
 
-class PopularBooksViewModel : ViewModel() {
+class CollectionListViewModel : ViewModel() {
 	private val repository = ApiRepository()
 
 	private val _books = MutableLiveData<List<Book>>()
@@ -23,7 +23,7 @@ class PopularBooksViewModel : ViewModel() {
 		viewModelScope.launch {
 			try {
 				val token = AuthStore.getToken(context)
-				val response = repository.getBooks(token)
+				val response = repository.getCollectionList(token)
 				_books.value = response.data
 			} catch (e: Exception) {
 				_books.value = emptyList()

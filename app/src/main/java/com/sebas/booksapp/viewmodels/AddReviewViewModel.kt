@@ -1,34 +1,33 @@
 package com.sebas.booksapp.viewmodels
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sebas.booksapp.AuthStore
-import com.sebas.booksapp.models.Book
 import com.sebas.booksapp.network.ApiRepository
 import kotlinx.coroutines.launch
 
-class PopularBooksViewModel : ViewModel() {
+class AddReviewViewModel : ViewModel() {
 	private val repository = ApiRepository()
 
-	private val _books = MutableLiveData<List<Book>>()
-	val books: LiveData<List<Book>> get() = _books
+	private val _review = MutableLiveData<String>()
+	val review: LiveData<String> get() = _review
 
-	private val _isLoading = MutableLiveData<Boolean>()
-	val isLoading: LiveData<Boolean> get() = _isLoading
+	fun changeReview(review: String) {
+		_review.value = review
+	}
 
-	fun getBooks(context: Context) {
+	fun addReview(bookId: String, context: Context) {
 		viewModelScope.launch {
 			try {
 				val token = AuthStore.getToken(context)
-				val response = repository.getBooks(token)
-				_books.value = response.data
+				val response = repository.addReview(token, bookId, _review.value!!)
+				Log.d("AddReview", "Review added: ${response.data}")
 			} catch (e: Exception) {
-				_books.value = emptyList()
-			} finally {
-				_isLoading.value = false
+				Log.e("AddReview", "Error: ${e.message}")
 			}
 		}
 	}

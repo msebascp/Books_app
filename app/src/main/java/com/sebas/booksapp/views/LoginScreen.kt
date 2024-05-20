@@ -34,7 +34,8 @@ import com.sebas.booksapp.views.components.PasswordTextField
 
 @Composable
 fun LoginScreen(
-	navController: NavController, loginViewModel: LoginViewModel = viewModel()
+	navController: NavController,
+	loginViewModel: LoginViewModel = viewModel()
 ) {
 	loginViewModel.checkToken(navController, LocalContext.current)
 	val isLoading = loginViewModel.isLoading.observeAsState(true)

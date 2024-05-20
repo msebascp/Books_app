@@ -1,5 +1,6 @@
 package com.sebas.booksapp.views
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.WatchLater
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -50,11 +54,14 @@ fun BookDetailScreen(
 	bookDetailViewModel: BookDetailViewModel = viewModel(),
 ) {
 	val context = LocalContext.current
-	bookDetailViewModel.getBook(bookId, context)
 	val scope = rememberCoroutineScope()
-	val book by bookDetailViewModel.book.observeAsState()
 	val sheetState = rememberModalBottomSheetState()
 	var showBottomSheet by remember { mutableStateOf(false) }
+	val book: BookDetail? by bookDetailViewModel.book.observeAsState()
+
+	LaunchedEffect(bookId) {
+		bookDetailViewModel.getBook(bookId, context)
+	}
 
 	Scaffold(
 		topBar = {
@@ -69,7 +76,7 @@ fun BookDetailScreen(
 					},
 					sheetState = sheetState,
 				) {
-					SheetContent()
+					SheetContent(book, context, bookDetailViewModel, navController)
 				}
 			}
 		},
@@ -120,11 +127,15 @@ fun BookDeatilContent(paddingValues: PaddingValues, book: BookDetail?) {
 							)
 						}
 					}
+					var color = Color.Gray
+					if (book?.is_like == true) {
+						color = Color.Blue
+					}
 					if (book?.is_read == true) {
 						Icon(
 							imageVector = Icons.Default.Favorite,
 							contentDescription = "Like",
-							tint = androidx.compose.ui.graphics.Color.Gray,
+							tint = color,
 						)
 					}
 				}
@@ -146,56 +157,120 @@ fun BookDeatilContent(paddingValues: PaddingValues, book: BookDetail?) {
 }
 
 @Composable
-fun SheetContent() {
-	Row(
+fun SheetContent(
+	book: BookDetail?,
+	context: Context,
+	bookDetailViewModel: BookDetailViewModel,
+	navController: NavController
+) {
+	Column(
 		modifier = Modifier
 			.padding(16.dp)
-			.fillMaxWidth(),
-		horizontalArrangement = Arrangement.SpaceBetween
+			.fillMaxWidth()
 	) {
-		IconButton(
-			onClick = { /*TODO*/ },
+		Row(
+			modifier = Modifier
+				.fillMaxWidth(),
+			horizontalArrangement = Arrangement.SpaceBetween
 		) {
-			Icon(
-				imageVector = Icons.Default.BookmarkAdd,
-				contentDescription = "ReadIcon",
-				modifier = Modifier
-					.width(80.dp)
-					.height(80.dp)
-			)
+			IconButton(
+				onClick = {
+					if (book?.is_read == true) {
+						bookDetailViewModel.deleteReadBook(book.id.toString(), context)
+					} else if (book?.is_read == false) {
+						bookDetailViewModel.addReadBook(book.id.toString(), context)
+					}
+				},
+			) {
+				var color = Color.Gray
+				if (book?.is_read == true) {
+					color = Color.Blue
+				}
+				Icon(
+					imageVector = Icons.Default.BookmarkAdd,
+					contentDescription = "ReadIcon",
+					modifier = Modifier
+						.width(80.dp)
+						.height(80.dp),
+					tint = color,
+				)
+			}
+			IconButton(
+				onClick = {
+					if (book?.in_watchlist == true) {
+						bookDetailViewModel.deleteWatchListBook(book.id.toString(), context)
+					} else if (book?.in_watchlist == false) {
+						bookDetailViewModel.addWatchListBook(book.id.toString(), context)
+					}
+				},
+			) {
+				var color = Color.Gray
+				if (book?.in_watchlist == true) {
+					color = Color.Blue
+				}
+				Icon(
+					imageVector = Icons.Default.WatchLater,
+					contentDescription = "WatchlistIcon",
+					modifier = Modifier
+						.width(80.dp)
+						.height(80.dp),
+					tint = color,
+				)
+			}
+			IconButton(
+				onClick = {
+					if (book?.in_collectionlist == true) {
+						bookDetailViewModel.deleteCollectionListBook(book.id.toString(), context)
+					} else if (book?.in_collectionlist == false) {
+						bookDetailViewModel.addCollectionListBook(book.id.toString(), context)
+					}
+				},
+			) {
+				var color = Color.Gray
+				if (book?.in_collectionlist == true) {
+					color = Color.Blue
+				}
+				Icon(
+					imageVector = Icons.Default.CollectionsBookmark,
+					contentDescription = "CollectionlistIcon",
+					modifier = Modifier
+						.width(80.dp)
+						.height(80.dp),
+					tint = color,
+				)
+			}
+			IconButton(
+				onClick = {
+					if (book?.is_like == true) {
+						bookDetailViewModel.unlikeBook(book.id.toString(), context)
+					} else if (book?.is_like == false) {
+						bookDetailViewModel.likeBook(book.id.toString(), context)
+					}
+				},
+			) {
+				var color = Color.Gray
+				if (book?.is_like == true) {
+					color = Color.Blue
+				}
+				Icon(
+					imageVector = Icons.Default.Favorite,
+					contentDescription = "Like",
+					modifier = Modifier
+						.width(80.dp)
+						.height(80.dp),
+					tint = color,
+				)
+			}
 		}
-		IconButton(
-			onClick = { /*TODO*/ },
+		FilledTonalButton(
+			onClick = {
+				navController.navigate("addReviewScreen/${book?.id}")
+			},
+			modifier = Modifier
+				.padding(top = 16.dp)
+				.fillMaxWidth()
 		) {
-			Icon(
-				imageVector = Icons.Default.WatchLater,
-				contentDescription = "WatchlistIcon",
-				modifier = Modifier
-					.width(80.dp)
-					.height(80.dp)
-			)
-		}
-		IconButton(
-			onClick = { /*TODO*/ },
-		) {
-			Icon(
-				imageVector = Icons.Default.CollectionsBookmark,
-				contentDescription = "CollectionlistIcon",
-				modifier = Modifier
-					.width(80.dp)
-					.height(80.dp)
-			)
-		}
-		IconButton(
-			onClick = { /*TODO*/ },
-		) {
-			Icon(
-				imageVector = Icons.Default.Favorite,
-				contentDescription = "Like",
-				modifier = Modifier
-					.width(80.dp)
-					.height(80.dp)
-			)
+			Text("Escribir reseña")
 		}
 	}
 }

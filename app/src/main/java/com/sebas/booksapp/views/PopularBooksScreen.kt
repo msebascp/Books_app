@@ -23,7 +23,6 @@ import com.sebas.booksapp.views.components.CardImageBook
 import com.sebas.booksapp.views.components.LoadingScreen
 import com.sebas.booksapp.views.components.TopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PopularBooksScreen(
 	drawerState: DrawerState,

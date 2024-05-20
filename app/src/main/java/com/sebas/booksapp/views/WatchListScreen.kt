@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,39 +17,38 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sebas.booksapp.models.Book
-import com.sebas.booksapp.viewmodels.ReadListViewModel
+import com.sebas.booksapp.viewmodels.WatchListViewModel
 import com.sebas.booksapp.views.components.CardImageBook
 import com.sebas.booksapp.views.components.LoadingScreen
 import com.sebas.booksapp.views.components.TopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReadListScreen(
+fun WatchListScreen(
 	drawerState: DrawerState,
 	navController: NavController,
-	readListViewModel: ReadListViewModel = viewModel(),
+	watchListViewModel: WatchListViewModel = viewModel(),
 ) {
-	readListViewModel.getReadList(LocalContext.current)
-	val isLoading by readListViewModel.isLoading.observeAsState(true)
-	val books by readListViewModel.books.observeAsState(emptyList())
+	watchListViewModel.getBooks(LocalContext.current)
+	val isLoading by watchListViewModel.isLoading.observeAsState(true)
+	val books by watchListViewModel.books.observeAsState(emptyList())
 	val scope = rememberCoroutineScope()
 
 	Scaffold(
 		topBar = {
-			TopBar(navController = navController, drawerState, scope, title = "Libros leídos")
+			TopBar(navController = navController, drawerState, scope, title = "Libros por leer")
 		},
 		content = { paddingValues ->
 			if (isLoading) {
 				LoadingScreen()
 			} else {
-				ReadListGrid(books, paddingValues, navController)
+				WatchListGrid(books, paddingValues, navController)
 			}
 		},
 	)
 }
 
 @Composable
-fun ReadListGrid(
+fun WatchListGrid(
 	books: List<Book>,
 	paddingValues: PaddingValues,
 	navController: NavController
