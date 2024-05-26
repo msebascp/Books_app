@@ -19,11 +19,11 @@ class CollectionListViewModel : ViewModel() {
 	private val _isLoading = MutableLiveData<Boolean>()
 	val isLoading: LiveData<Boolean> get() = _isLoading
 
-	fun getBooks(context: Context) {
+	fun getBooks(context: Context, userId: String? = "") {
 		viewModelScope.launch {
 			try {
 				val token = AuthStore.getToken(context)
-				val response = repository.getCollectionList(token)
+				val response = repository.getCollectionList(token, userId)
 				_books.value = response.data
 			} catch (e: Exception) {
 				_books.value = emptyList()

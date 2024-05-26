@@ -24,6 +24,7 @@ class BookDetailViewModel : ViewModel() {
 				val response = repository.getBook(token, bookId)
 				_book.value = response.data
 			} catch (e: Exception) {
+				Log.e("Error GetBook", "Response: $e")
 				Log.e("Error GetBook", "Error: ${e.message}")
 			}
 		}

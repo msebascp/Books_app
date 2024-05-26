@@ -26,9 +26,10 @@ import com.sebas.booksapp.views.components.TopBar
 fun WatchListScreen(
 	drawerState: DrawerState,
 	navController: NavController,
+	userId: String?,
 	watchListViewModel: WatchListViewModel = viewModel(),
 ) {
-	watchListViewModel.getBooks(LocalContext.current)
+	watchListViewModel.getBooks(LocalContext.current, userId)
 	val isLoading by watchListViewModel.isLoading.observeAsState(true)
 	val books by watchListViewModel.books.observeAsState(emptyList())
 	val scope = rememberCoroutineScope()

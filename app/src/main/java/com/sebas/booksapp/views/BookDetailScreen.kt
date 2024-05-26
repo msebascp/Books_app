@@ -22,6 +22,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -68,7 +69,7 @@ fun BookDetailScreen(
 			TopBar(navController = navController, drawerState, scope, true)
 		},
 		content = { paddingValues ->
-			BookDeatilContent(paddingValues, book)
+			BookDetailContent(paddingValues, book)
 			if (showBottomSheet) {
 				ModalBottomSheet(
 					onDismissRequest = {
@@ -83,6 +84,7 @@ fun BookDetailScreen(
 		floatingActionButton = {
 			FloatingActionButton(
 				onClick = { showBottomSheet = true },
+				containerColor = MaterialTheme.colorScheme.secondaryContainer
 			) {
 				Icon(Icons.Filled.Add, "Floating action button.")
 			}
@@ -91,7 +93,7 @@ fun BookDetailScreen(
 }
 
 @Composable
-fun BookDeatilContent(paddingValues: PaddingValues, book: BookDetail?) {
+fun BookDetailContent(paddingValues: PaddingValues, book: BookDetail?) {
 	LazyColumn(
 		contentPadding = paddingValues
 	) {
@@ -163,6 +165,10 @@ fun SheetContent(
 	bookDetailViewModel: BookDetailViewModel,
 	navController: NavController
 ) {
+	var enabledButton: Boolean = true
+	if (book?.is_read == false) {
+		enabledButton = false
+	}
 	Column(
 		modifier = Modifier
 			.padding(16.dp)
@@ -247,6 +253,7 @@ fun SheetContent(
 						bookDetailViewModel.likeBook(book.id.toString(), context)
 					}
 				},
+				enabled = enabledButton
 			) {
 				var color = Color.Gray
 				if (book?.is_like == true) {
@@ -266,6 +273,7 @@ fun SheetContent(
 			onClick = {
 				navController.navigate("addReviewScreen/${book?.id}")
 			},
+			enabled = enabledButton,
 			modifier = Modifier
 				.padding(top = 16.dp)
 				.fillMaxWidth()

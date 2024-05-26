@@ -1,34 +1,31 @@
 package com.sebas.booksapp.viewmodels
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sebas.booksapp.AuthStore
-import com.sebas.booksapp.models.Book
+import com.sebas.booksapp.models.User
 import com.sebas.booksapp.network.ApiRepository
 import kotlinx.coroutines.launch
 
-class WatchListViewModel : ViewModel() {
+class FollowingViewModel : ViewModel() {
 	private val repository = ApiRepository()
 
-	private val _books = MutableLiveData<List<Book>>()
-	val books: LiveData<List<Book>> get() = _books
+	private val _following = MutableLiveData<List<User>>()
+	val following: LiveData<List<User>> get() = _following
 
-	private val _isLoading = MutableLiveData<Boolean>()
-	val isLoading: LiveData<Boolean> get() = _isLoading
-
-	fun getBooks(context: Context, userId: String?) {
+	fun getFollowing(context: Context, userId: String) {
 		viewModelScope.launch {
 			try {
 				val token = AuthStore.getToken(context)
-				val response = repository.getWatchList(token, userId)
-				_books.value = response.data
+				val response = repository.getFollowing(token, userId)
+				_following.value = response.data
+				Log.d("GetFollowing", "Response: $response")
 			} catch (e: Exception) {
-				_books.value = emptyList()
-			} finally {
-				_isLoading.value = false
+				Log.e("Error GetFollowing", "Error: ${e.message}")
 			}
 		}
 	}

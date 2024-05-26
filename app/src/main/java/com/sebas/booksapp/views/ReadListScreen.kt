@@ -19,7 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.sebas.booksapp.models.Book
 import com.sebas.booksapp.viewmodels.ReadListViewModel
-import com.sebas.booksapp.views.components.CardImageBook
+import com.sebas.booksapp.views.components.CardImageReadBook
 import com.sebas.booksapp.views.components.LoadingScreen
 import com.sebas.booksapp.views.components.TopBar
 
@@ -28,9 +28,10 @@ import com.sebas.booksapp.views.components.TopBar
 fun ReadListScreen(
 	drawerState: DrawerState,
 	navController: NavController,
+	userId: String?,
 	readListViewModel: ReadListViewModel = viewModel(),
 ) {
-	readListViewModel.getReadList(LocalContext.current)
+	readListViewModel.getReadList(LocalContext.current, userId)
 	val isLoading by readListViewModel.isLoading.observeAsState(true)
 	val books by readListViewModel.books.observeAsState(emptyList())
 	val scope = rememberCoroutineScope()
@@ -43,7 +44,7 @@ fun ReadListScreen(
 			if (isLoading) {
 				LoadingScreen()
 			} else {
-				ReadListGrid(books, paddingValues, navController)
+				ReadListGrid(books, paddingValues, navController, userId)
 			}
 		},
 	)
@@ -53,7 +54,8 @@ fun ReadListScreen(
 fun ReadListGrid(
 	books: List<Book>,
 	paddingValues: PaddingValues,
-	navController: NavController
+	navController: NavController,
+	userId: String?
 ) {
 	LazyVerticalGrid(
 		columns = GridCells.Adaptive(110.dp),
@@ -62,7 +64,7 @@ fun ReadListGrid(
 		contentPadding = PaddingValues(6.dp)
 	) {
 		items(items = books, key = { book -> book.id }) { book ->
-			CardImageBook(navController, book)
+			CardImageReadBook(navController, book, userId)
 		}
 	}
 }

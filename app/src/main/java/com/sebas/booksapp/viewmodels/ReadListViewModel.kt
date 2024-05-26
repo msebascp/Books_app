@@ -20,11 +20,11 @@ class ReadListViewModel : ViewModel() {
 	private val _isLoading = MutableLiveData<Boolean>()
 	val isLoading: LiveData<Boolean> get() = _isLoading
 
-	fun getReadList(context: Context) {
+	fun getReadList(context: Context, userId: String?) {
 		viewModelScope.launch {
 			try {
 				val token = AuthStore.getToken(context)
-				val response = repository.getReadList(token)
+				val response = repository.getReadBooks(token, userId)
 				_books.value = response.data
 			} catch (e: Exception) {
 				Log.e("ReadListViewModel", "Error getting read list", e)

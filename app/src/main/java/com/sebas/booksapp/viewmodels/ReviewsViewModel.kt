@@ -20,11 +20,11 @@ class ReviewsViewModel : ViewModel() {
 	private val _isLoading = MutableLiveData<Boolean>()
 	val isLoading: LiveData<Boolean> get() = _isLoading
 
-	fun getReviews(context: Context) {
+	fun getReviews(context: Context, userId: String?) {
 		viewModelScope.launch {
 			try {
 				val token = AuthStore.getToken(context)
-				val response = repository.getReviews(token)
+				val response = repository.getReviews(token, userId)
 				_reviews.value = response.data
 				Log.d("ReviewsViewModel - getReviews", "${response.data}")
 			} catch (e: Exception) {

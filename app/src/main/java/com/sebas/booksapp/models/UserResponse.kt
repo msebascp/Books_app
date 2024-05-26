@@ -1,7 +1,7 @@
 package com.sebas.booksapp.models
 
-data class ReviewsResponse(
-	val `data`: List<Review>,
+data class UserResponse(
+	val `data`: User,
 	val message: String,
 	val success: Boolean
 )

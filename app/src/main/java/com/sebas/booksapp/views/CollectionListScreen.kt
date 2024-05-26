@@ -26,9 +26,10 @@ import com.sebas.booksapp.views.components.TopBar
 fun CollectionListScreen(
 	drawerState: DrawerState,
 	navController: NavController,
+	userId: String?,
 	collectionListViewModel: CollectionListViewModel = viewModel(),
 ) {
-	collectionListViewModel.getBooks(LocalContext.current)
+	collectionListViewModel.getBooks(LocalContext.current, userId)
 	val isLoading by collectionListViewModel.isLoading.observeAsState(true)
 	val books by collectionListViewModel.books.observeAsState(emptyList())
 	val scope = rememberCoroutineScope()
