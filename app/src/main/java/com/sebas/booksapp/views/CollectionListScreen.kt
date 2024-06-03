@@ -36,7 +36,13 @@ fun CollectionListScreen(
 
 	Scaffold(
 		topBar = {
-			TopBar(navController = navController, drawerState, scope, title = "Colección de libros")
+			TopBar(
+				navController = navController,
+				drawerState,
+				scope,
+				title = "Colección de libros",
+				goBack = true
+			)
 		},
 		content = { paddingValues ->
 			if (isLoading) {

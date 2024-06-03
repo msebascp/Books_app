@@ -38,7 +38,13 @@ fun ReadListScreen(
 
 	Scaffold(
 		topBar = {
-			TopBar(navController = navController, drawerState, scope, title = "Libros leídos")
+			TopBar(
+				navController = navController,
+				drawerState,
+				scope,
+				title = "Libros leídos",
+				goBack = true
+			)
 		},
 		content = { paddingValues ->
 			if (isLoading) {

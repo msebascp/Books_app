@@ -1,7 +1,6 @@
 package com.sebas.booksapp.views
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,32 +11,47 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.sebas.booksapp.R.drawable.icon_books
 import com.sebas.booksapp.viewmodels.LoginViewModel
 import com.sebas.booksapp.views.components.EmailTextField
+import com.sebas.booksapp.views.components.IconApp
 import com.sebas.booksapp.views.components.LoadingScreen
-import com.sebas.booksapp.views.components.PasswordTextField
 
 @Composable
 fun LoginScreen(
 	navController: NavController,
 	loginViewModel: LoginViewModel = viewModel()
 ) {
-	loginViewModel.checkToken(navController, LocalContext.current)
+	val context = LocalContext.current
+	LaunchedEffect(navController) {
+		loginViewModel.checkToken(navController, context)
+	}
 	val isLoading = loginViewModel.isLoading.observeAsState(true)
 	if (isLoading.value) {
 		LoadingScreen()
@@ -69,7 +83,7 @@ fun Login(
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.spacedBy(16.dp)
 	) {
-		IconApp()
+		IconApp(75)
 		EmailTextField(email) { loginViewModel.onLoginChange(it, password) }
 		PasswordTextField(
 			password,
@@ -81,8 +95,8 @@ fun Login(
 			modifier = Modifier.fillMaxWidth(),
 			horizontalArrangement = Arrangement.SpaceBetween,
 		) {
-			RegisterLink()
-			ForgotPassword()
+			RegisterLink(navController)
+			ForgotPassword(navController)
 		}
 		LoginButton(loginEnabled) {
 			loginViewModel.login(navController, context)
@@ -95,22 +109,67 @@ fun Login(
 }
 
 @Composable
-fun IconApp() {
-	Image(painter = painterResource(id = icon_books), contentDescription = "Icon App")
-}
-
-@Composable
-fun RegisterLink() {
-	Text(
-		text = "Regístrate aquí"
+fun PasswordTextField(
+	password: String,
+	passwordVisible: Boolean,
+	onPasswordChange: (String) -> Unit,
+	onVisibilityChange: () -> Unit
+) {
+	val visualTransformation =
+		if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+	OutlinedTextField(
+		value = password,
+		onValueChange = { onPasswordChange(it) },
+		label = { Text(text = "Contraseña") },
+		modifier = Modifier.fillMaxWidth(),
+		keyboardOptions = KeyboardOptions(
+			keyboardType = KeyboardType.Password,
+			imeAction = ImeAction.Done
+		),
+		singleLine = true,
+		visualTransformation = visualTransformation,
+		trailingIcon = {
+			if (password.isNotEmpty()) {
+				PasswordVisibleIcon(passwordVisible) { onVisibilityChange() }
+			}
+		}
 	)
 }
 
 @Composable
-fun ForgotPassword() {
-	Text(
-		text = "¿Olvidaste tu contraseña?"
-	)
+fun PasswordVisibleIcon(passwordVisible: Boolean, onClick: () -> Unit) {
+	val icon = if (passwordVisible) Icons.Default.VisibilityOff
+	else Icons.Default.Visibility
+	IconButton(onClick = { onClick() }) {
+		Icon(
+			imageVector = icon,
+			contentDescription = "Toggle password visibility"
+		)
+	}
+}
+
+@Composable
+fun RegisterLink(navController: NavController) {
+	TextButton(
+		onClick = { navController.navigate("registerScreen") }
+	) {
+		Text(
+			text = "Regístrate aquí",
+			color = MaterialTheme.colorScheme.onSurface
+		)
+	}
+}
+
+@Composable
+fun ForgotPassword(navController: NavController) {
+	TextButton(
+		onClick = { navController.navigate("forgotPasswordScreen") }
+	) {
+		Text(
+			text = "¿Olvidaste tu contraseña?",
+			color = MaterialTheme.colorScheme.onSurface
+		)
+	}
 }
 
 @Composable

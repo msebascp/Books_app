@@ -111,7 +111,11 @@ fun BookDetailContent(paddingValues: PaddingValues, book: BookDetail?) {
 						.height(165.dp),
 					verticalArrangement = Arrangement.SpaceBetween
 				) {
-					Column {
+					Column(
+						modifier = Modifier
+							.weight(1f),
+						verticalArrangement = Arrangement.SpaceAround
+					) {
 						Text(
 							book?.name ?: "",
 							softWrap = true,
@@ -131,7 +135,7 @@ fun BookDetailContent(paddingValues: PaddingValues, book: BookDetail?) {
 					}
 					var color = Color.Gray
 					if (book?.is_like == true) {
-						color = Color.Blue
+						color = MaterialTheme.colorScheme.tertiary
 					}
 					if (book?.is_read == true) {
 						Icon(
@@ -190,7 +194,7 @@ fun SheetContent(
 			) {
 				var color = Color.Gray
 				if (book?.is_read == true) {
-					color = Color.Blue
+					color = MaterialTheme.colorScheme.primary
 				}
 				Icon(
 					imageVector = Icons.Default.BookmarkAdd,
@@ -212,7 +216,7 @@ fun SheetContent(
 			) {
 				var color = Color.Gray
 				if (book?.in_watchlist == true) {
-					color = Color.Blue
+					color = MaterialTheme.colorScheme.primary
 				}
 				Icon(
 					imageVector = Icons.Default.WatchLater,
@@ -234,7 +238,7 @@ fun SheetContent(
 			) {
 				var color = Color.Gray
 				if (book?.in_collectionlist == true) {
-					color = Color.Blue
+					color = MaterialTheme.colorScheme.primary
 				}
 				Icon(
 					imageVector = Icons.Default.CollectionsBookmark,
@@ -257,7 +261,7 @@ fun SheetContent(
 			) {
 				var color = Color.Gray
 				if (book?.is_like == true) {
-					color = Color.Blue
+					color = MaterialTheme.colorScheme.tertiary
 				}
 				Icon(
 					imageVector = Icons.Default.Favorite,
@@ -276,7 +280,8 @@ fun SheetContent(
 			enabled = enabledButton,
 			modifier = Modifier
 				.padding(top = 16.dp)
-				.fillMaxWidth()
+				.fillMaxWidth(),
+			contentPadding = PaddingValues(10.dp),
 		) {
 			Text("Escribir reseña")
 		}

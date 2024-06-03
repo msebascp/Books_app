@@ -12,11 +12,13 @@ import com.sebas.booksapp.views.BookDetailScreen
 import com.sebas.booksapp.views.CollectionListScreen
 import com.sebas.booksapp.views.FollowersScreen
 import com.sebas.booksapp.views.FollowingScreen
+import com.sebas.booksapp.views.ForgotPasswordScreen
 import com.sebas.booksapp.views.LoginScreen
 import com.sebas.booksapp.views.PopularBooksScreen
 import com.sebas.booksapp.views.ProfileScreen
 import com.sebas.booksapp.views.ReadBookDetailScreen
 import com.sebas.booksapp.views.ReadListScreen
+import com.sebas.booksapp.views.RegisterScreen
 import com.sebas.booksapp.views.ReviewsScreen
 import com.sebas.booksapp.views.SearchScreen
 import com.sebas.booksapp.views.WatchListScreen
@@ -51,6 +53,9 @@ fun NavManager(drawerState: DrawerState, navController: NavHostController) {
 			val userId = backStackEntry.arguments?.getString("userId")
 			FollowingScreen(drawerState, navController, userId!!)
 		}
+		composable("forgotPasswordScreen") {
+			ForgotPasswordScreen(navController)
+		}
 		composable("loginScreen") {
 			LoginScreen(navController)
 		}
@@ -78,6 +83,9 @@ fun NavManager(drawerState: DrawerState, navController: NavHostController) {
 		) { backStackEntry ->
 			val userId = backStackEntry.arguments?.getString("userId")
 			ReadListScreen(drawerState, navController, userId)
+		}
+		composable("registerScreen") {
+			RegisterScreen(navController)
 		}
 		composable(
 			"reviewsScreen?userId={userId}",

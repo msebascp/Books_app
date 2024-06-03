@@ -69,7 +69,7 @@ fun AddCommentContent(
 				.padding(top = 16.dp)
 				.fillMaxWidth()
 		) {
-			Text("Añadir reseña")
+			Text("Añadir comentario")
 		}
 	}
 }

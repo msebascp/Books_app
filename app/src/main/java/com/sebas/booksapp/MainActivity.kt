@@ -6,7 +6,10 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.sebas.booksapp.navigation.NavManager
 import com.sebas.booksapp.network.ApiRepository
 import com.sebas.booksapp.ui.theme.BooksAppTheme
+import com.sebas.booksapp.views.components.IconApp
 import kotlinx.coroutines.launch
 
 
@@ -65,6 +69,12 @@ class MainActivity : ComponentActivity() {
 fun Menu(drawerState: DrawerState, navController: NavHostController) {
 	val scope = rememberCoroutineScope()
 	ModalDrawerSheet {
+		Row(
+			modifier = Modifier.fillMaxWidth(),
+			horizontalArrangement = Arrangement.Center
+		) {
+			IconApp(width = 75)
+		}
 		NavigationDrawerItem(
 			label = { Text(text = "Perfil") },
 			selected = false,

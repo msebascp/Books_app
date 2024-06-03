@@ -59,10 +59,8 @@ class LoginViewModel : ViewModel() {
 		viewModelScope.launch {
 			try {
 				val response = repository.login(_email.value ?: "", _password.value ?: "")
-				Log.d("LoginViewModel", "Login finished with response: $response")
 				AuthStore.saveToken(response.token, context)
-				val token = AuthStore.getToken(context)
-				Log.d("LoginViewModel", "El token es: $token")
+				Log.d("LoginViewModel", "Login finished with response: $response")
 				navController.navigate("popularBooksScreen")
 			} catch (e: Exception) {
 				Log.e("LoginViewModel", "Login failed with exception: $e")

@@ -8,6 +8,8 @@ import com.sebas.booksapp.models.CommentResponse
 import com.sebas.booksapp.models.LoginRequest
 import com.sebas.booksapp.models.LoginResponse
 import com.sebas.booksapp.models.ReadBookResponse
+import com.sebas.booksapp.models.RegisterRequest
+import com.sebas.booksapp.models.RegisterResponse
 import com.sebas.booksapp.models.ReviewRequest
 import com.sebas.booksapp.models.ReviewsUserResponse
 import com.sebas.booksapp.models.UserResponse
@@ -24,13 +26,25 @@ interface ApiInterface {
 	@POST("login")
 	suspend fun login(@Body request: LoginRequest): LoginResponse
 
+	@POST("register")
+	suspend fun register(@Body request: RegisterRequest): RegisterResponse
+
 	@GET("check_token")
 	suspend fun checkToken(@Header("Authorization") token: String): LoginResponse
 
 	@GET("logout")
 	suspend fun logout(@Header("Authorization") token: String): BasicResponse
 
+	@GET("forgot_password/{email}")
+	suspend fun forgotPassword(
+		@Path("email") email: String
+	): BasicResponse
 	// Rutas User
+
+	@GET("users")
+	suspend fun getUser(
+		@Header("Authorization") token: String,
+	): UserResponse
 
 	@GET("users/{userId}")
 	suspend fun getUser(
@@ -42,13 +56,13 @@ interface ApiInterface {
 	suspend fun followUser(
 		@Header("Authorization") token: String,
 		@Path("userId") userId: Int
-	): BasicResponse
+	): UserResponse
 
 	@DELETE("follows/{userId}")
 	suspend fun unfollowUser(
 		@Header("Authorization") token: String,
 		@Path("userId") userId: Int
-	): BasicResponse
+	): UserResponse
 
 	@GET("follows/followers/{userId}")
 	suspend fun getFollowers(
@@ -85,11 +99,22 @@ interface ApiInterface {
 	): BooksResponse
 
 	// Rutas ReadBook
+	@GET("readbooks/user")
+	suspend fun getReadBooks(
+		@Header("Authorization") token: String
+	): BooksResponse
+
 	@GET("readbooks/user/{userId}")
 	suspend fun getReadBooks(
 		@Header("Authorization") token: String,
 		@Path("userId") userId: String? = ""
 	): BooksResponse
+
+	@GET("readbooks/book/{bookId}")
+	suspend fun getReadBook(
+		@Header("Authorization") token: String,
+		@Path("bookId") bookId: String,
+	): ReadBookResponse
 
 	@GET("readbooks/book/{bookId}/{userId}")
 	suspend fun getReadBook(
@@ -125,6 +150,11 @@ interface ApiInterface {
 	@GET("like_books")
 	suspend fun getLikeBooks(@Header("Authorization") token: String): BooksResponse
 
+	@GET("watchbooks/user")
+	suspend fun getWatchList(
+		@Header("Authorization") token: String,
+	): BooksResponse
+
 	@GET("watchbooks/user/{userId}")
 	suspend fun getWatchList(
 		@Header("Authorization") token: String,
@@ -143,12 +173,16 @@ interface ApiInterface {
 		@Path("bookId") bookId: String
 	): BookResponse
 
+	@GET("collectionbooks/user")
+	suspend fun getCollectionList(
+		@Header("Authorization") token: String,
+	): BooksResponse
+
 	@GET("collectionbooks/user/{userId}")
 	suspend fun getCollectionList(
 		@Header("Authorization") token: String,
 		@Path("userId") userId: String? = ""
 	): BooksResponse
-
 
 	@GET("collectionbooks/{bookId}")
 	suspend fun storeCollectionListBook(
@@ -167,6 +201,11 @@ interface ApiInterface {
 		@Header("Authorization") token: String,
 		@Body request: ReviewRequest
 	): BookResponse
+
+	@GET("reviews/user")
+	suspend fun getReviewsUser(
+		@Header("Authorization") token: String
+	): ReviewsUserResponse
 
 	@GET("reviews/user/{userId}")
 	suspend fun getReviewsUser(

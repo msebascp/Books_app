@@ -11,9 +11,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,9 +32,9 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.sebas.booksapp.models.ReadBook
 import com.sebas.booksapp.viewmodels.ReadBookDetailViewModel
+import com.sebas.booksapp.views.components.CardComment
+import com.sebas.booksapp.views.components.CardUserMini
 import com.sebas.booksapp.views.components.TopBar
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun ReadBookDetailScreen(
@@ -49,7 +51,6 @@ fun ReadBookDetailScreen(
 	val scope = rememberCoroutineScope()
 	val readBook: ReadBook? by readBookViewModel.readBook.observeAsState()
 	val showComments: Boolean by readBookViewModel.showComments.observeAsState(false)
-
 
 	Scaffold(
 		topBar = {
@@ -68,7 +69,7 @@ fun ReadBookDetailScreen(
 						}
 					}
 					if (showComments) {
-						ReadBookComments(readBook)
+						ReadBookComments(readBook, navController)
 					} else {
 						ReadBookDetailContent(readBook)
 					}
@@ -98,30 +99,36 @@ fun ReadBookButtonsMenu(
 	) {
 		TextButton(
 			onClick = { onClickButton(false) },
-			modifier = Modifier.weight(1f)
+			modifier = Modifier.weight(1f),
 		) {
-			Text("Reseña")
+			Text(
+				text = "Reseña",
+				style = MaterialTheme.typography.bodyLarge
+			)
 		}
 		TextButton(
 			onClick = { onClickButton(true) },
 			modifier = Modifier.weight(1f)
 		) {
-			Text("Comentarios")
+			Text(
+				text = "Comentarios",
+				style = MaterialTheme.typography.bodyLarge
+			)
 		}
 	}
 }
 
 @Composable
-fun ReadBookComments(readBook: ReadBook?) {
+fun ReadBookComments(readBook: ReadBook?, navController: NavController) {
 	LazyColumn(
-		modifier = Modifier.fillMaxWidth()
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(16.dp),
 	) {
 		if (readBook?.review?.comments != null) {
-			items(items = readBook.review.comments, key = { comment -> comment.id }) { comment ->
-				Column {
-					Text(text = comment.user.name)
-					Text(text = comment.content)
-				}
+			items(items = readBook.review.comments) { comment ->
+				CardComment(comment = comment, navController = navController)
+				Divider(modifier = Modifier.padding(bottom = 16.dp))
 			}
 		}
 	}
@@ -132,15 +139,11 @@ fun ReadBookDetailContent(
 	readBook: ReadBook?
 ) {
 	if (readBook != null) {
-		// Obtenemos la fecha en la que se leyó el libro y la formateamos
-		val dateTime =
-			LocalDateTime.parse(readBook.created_at, DateTimeFormatter.ISO_ZONED_DATE_TIME)
-		val formattedDate = dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-
 		LazyColumn(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(16.dp)
+				.padding(16.dp),
+			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
 			item {
 				Row(
@@ -151,11 +154,17 @@ fun ReadBookDetailContent(
 						modifier = Modifier
 							.weight(1f)
 							.height(165.dp)
-							.padding(end = 16.dp)
+							.padding(end = 16.dp),
+						verticalArrangement = Arrangement.SpaceAround
 					) {
-						Text(text = readBook.user.name)
-						Text(text = readBook.book.name)
-						Text(text = "Leído el $formattedDate")
+						CardUserMini(user = readBook.user)
+						Text(
+							text = readBook.book.name,
+							style = MaterialTheme.typography.titleLarge
+						)
+						if (readBook.created_at != null) {
+							Text(text = "Leído el ${readBook.created_at}")
+						}
 					}
 					AsyncImage(
 						model = readBook.book.image_path,
@@ -166,6 +175,11 @@ fun ReadBookDetailContent(
 			}
 			if (readBook.review != null) {
 				item {
+					Text(
+						text = "Reseña:",
+						style = MaterialTheme.typography.titleLarge,
+						modifier = Modifier.padding(bottom = 8.dp, top = 16.dp)
+					)
 					Text(text = readBook.review.content)
 				}
 			}

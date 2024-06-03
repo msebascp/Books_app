@@ -5,7 +5,7 @@ data class ReadBook(
 	val book_id: Int,
 	val created_at: String,
 	val id: Int,
-	val is_like: Int,
+	val is_like: Boolean,
 	val review: ReviewDetail,
 	val updated_at: String,
 	val user_id: Int,

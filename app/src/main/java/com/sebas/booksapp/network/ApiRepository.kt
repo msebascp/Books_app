@@ -8,6 +8,8 @@ import com.sebas.booksapp.models.CommentResponse
 import com.sebas.booksapp.models.LoginRequest
 import com.sebas.booksapp.models.LoginResponse
 import com.sebas.booksapp.models.ReadBookResponse
+import com.sebas.booksapp.models.RegisterRequest
+import com.sebas.booksapp.models.RegisterResponse
 import com.sebas.booksapp.models.ReviewRequest
 import com.sebas.booksapp.models.ReviewsUserResponse
 import com.sebas.booksapp.models.UserResponse
@@ -21,6 +23,10 @@ class ApiRepository {
 		return apiService.login(LoginRequest(email, password))
 	}
 
+	suspend fun register(registerRequest: RegisterRequest): RegisterResponse {
+		return apiService.register(registerRequest)
+	}
+
 	suspend fun checkToken(token: String): LoginResponse {
 		return apiService.checkToken("Bearer $token")
 	}
@@ -29,17 +35,24 @@ class ApiRepository {
 		return apiService.logout("Bearer $token")
 	}
 
+	suspend fun forgotPassword(email: String): BasicResponse {
+		return apiService.forgotPassword(email)
+	}
+
 	// Rutas User
 
-	suspend fun getUser(token: String, userId: String = ""): UserResponse {
+	suspend fun getUser(token: String, userId: String? = ""): UserResponse {
+		if (userId == "" || userId == null) {
+			return apiService.getUser("Bearer $token")
+		}
 		return apiService.getUser("Bearer $token", userId)
 	}
 
-	suspend fun followUser(token: String, userId: Int): BasicResponse {
+	suspend fun followUser(token: String, userId: Int): UserResponse {
 		return apiService.followUser("Bearer $token", userId)
 	}
 
-	suspend fun unfollowUser(token: String, userId: Int): BasicResponse {
+	suspend fun unfollowUser(token: String, userId: Int): UserResponse {
 		return apiService.unfollowUser("Bearer $token", userId)
 	}
 
@@ -70,10 +83,17 @@ class ApiRepository {
 
 	// Rutas ReadBook
 	suspend fun getReadBooks(token: String, userId: String?): BooksResponse {
+		if (userId == null || userId == "") {
+			return apiService.getReadBooks("Bearer $token")
+
+		}
 		return apiService.getReadBooks("Bearer $token", userId)
 	}
 
-	suspend fun getReadBook(token: String, bookId: String, userId: String? = ""): ReadBookResponse {
+	suspend fun getReadBook(token: String, bookId: String, userId: String?): ReadBookResponse {
+		if (userId == null || userId == "") {
+			return apiService.getReadBook("Bearer $token", bookId)
+		}
 		return apiService.getReadBook("Bearer $token", bookId, userId)
 	}
 
@@ -98,10 +118,16 @@ class ApiRepository {
 	}
 
 	suspend fun getWatchList(token: String, userId: String?): BooksResponse {
+		if (userId == null || userId == "") {
+			return apiService.getWatchList("Bearer $token")
+		}
 		return apiService.getWatchList("Bearer $token", userId)
 	}
 
-	suspend fun getCollectionList(token: String, userId: String? = ""): BooksResponse {
+	suspend fun getCollectionList(token: String, userId: String?): BooksResponse {
+		if (userId == null || userId == "") {
+			return apiService.getCollectionList("Bearer $token")
+		}
 		return apiService.getCollectionList("Bearer $token", userId)
 	}
 
@@ -122,6 +148,9 @@ class ApiRepository {
 	}
 
 	suspend fun getReviews(token: String, userId: String?): ReviewsUserResponse {
+		if (userId == null || userId == "") {
+			return apiService.getReviewsUser("Bearer $token")
+		}
 		return apiService.getReviewsUser("Bearer $token", userId)
 	}
 

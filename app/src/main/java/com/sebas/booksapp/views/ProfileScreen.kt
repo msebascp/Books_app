@@ -1,6 +1,7 @@
 package com.sebas.booksapp.views
 
 import android.content.Context
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -23,12 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.sebas.booksapp.R
 import com.sebas.booksapp.models.User
 import com.sebas.booksapp.viewmodels.ProfileViewModel
+import com.sebas.booksapp.views.components.ButtonItemProfile
 import com.sebas.booksapp.views.components.TopBar
 
 @Composable
@@ -78,26 +83,47 @@ fun ProfileContent(
 					.fillMaxWidth(),
 				horizontalAlignment = Alignment.CenterHorizontally
 			) {
-				Text(text = user?.name ?: "Loading...")
-				AsyncImage(
-					model = user?.image_profile_path,
-					contentDescription = "Profile image",
-					modifier = Modifier
-						.width(85.dp)
-						.clip(CircleShape)
+				Text(
+					text = user?.name ?: "Loading...",
+					softWrap = true,
+					style = MaterialTheme.typography.bodyLarge
 				)
+				Text(
+					text = "@${user?.username}" ?: "Loading...",
+					softWrap = true,
+					style = MaterialTheme.typography.bodyMedium
+				)
+				if (user?.image_profile_path != null) {
+					AsyncImage(
+						model = user?.image_profile_path,
+						contentDescription = "Profile image",
+						modifier = Modifier
+							.width(85.dp)
+							.clip(CircleShape)
+					)
+				} else {
+					Image(
+						modifier = Modifier
+							.width(85.dp)
+							.clip(CircleShape),
+						painter = painterResource(
+							R.drawable.userprofiledefault,
+						),
+						contentDescription = "Default profile image"
+					)
+				}
 				if (user?.isMe == false) {
 					if (user?.isFollowing == true) {
 						TextButton(onClick = {
 							profileViewModel.unfollowUser(user.id, context)
 						}) {
-							Text("Unfollow")
+							Text("Siguiendo")
 						}
 					} else {
 						TextButton(onClick = {
 							profileViewModel.followUser(user.id, context)
 						}) {
-							Text("Follow")
+							Text("Seguir")
 						}
 					}
 				}
@@ -112,36 +138,36 @@ fun ProfileContent(
 					.fillMaxWidth(),
 				verticalArrangement = Arrangement.spacedBy(8.dp)
 			) {
-				TextButton(onClick = {
-					navController.navigate("readListScreen?userId=${user?.id}")
-				}) {
-					Text("Libros leídos")
-				}
-				TextButton(onClick = {
-					navController.navigate("collectionListScreen?userId=${user?.id}")
-				}) {
-					Text("Colección")
-				}
-				TextButton(onClick = {
-					navController.navigate("watchListScreen?userId=${user?.id}")
-				}) {
-					Text("Libros por leer")
-				}
-				TextButton(onClick = {
-					navController.navigate("reviewsScreen?userId=${user?.id}")
-				}) {
-					Text("Reseñas")
-				}
-				TextButton(onClick = {
-					navController.navigate("followersScreen/${user?.id}")
-				}) {
-					Text("Seguidores")
-				}
-				TextButton(onClick = {
-					navController.navigate("followingScreen/${user?.id}")
-				}) {
-					Text("Siguiendo")
-				}
+				ButtonItemProfile(
+					ruta = "readListScreen?userId=${user?.id}",
+					navController = navController,
+					textButton = "Libros leídos"
+				)
+				ButtonItemProfile(
+					ruta = "collectionListScreen?userId=${user?.id}",
+					navController = navController,
+					textButton = "Colección"
+				)
+				ButtonItemProfile(
+					ruta = "watchListScreen?userId=${user?.id}",
+					navController = navController,
+					textButton = "Libros por leer"
+				)
+				ButtonItemProfile(
+					ruta = "reviewsScreen?userId=${user?.id}",
+					navController = navController,
+					textButton = "Reseñas"
+				)
+				ButtonItemProfile(
+					ruta = "followersScreen/${user?.id}",
+					navController = navController,
+					textButton = "Seguidores"
+				)
+				ButtonItemProfile(
+					ruta = "followingScreen/${user?.id}",
+					navController = navController,
+					textButton = "Siguiendo"
+				)
 			}
 		}
 	}

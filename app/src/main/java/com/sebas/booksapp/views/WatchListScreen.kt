@@ -36,7 +36,13 @@ fun WatchListScreen(
 
 	Scaffold(
 		topBar = {
-			TopBar(navController = navController, drawerState, scope, title = "Libros por leer")
+			TopBar(
+				navController = navController,
+				drawerState,
+				scope,
+				title = "Libros por leer",
+				goBack = true
+			)
 		},
 		content = { paddingValues ->
 			if (isLoading) {

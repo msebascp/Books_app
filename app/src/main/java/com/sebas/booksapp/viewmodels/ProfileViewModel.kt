@@ -21,7 +21,7 @@ class ProfileViewModel : ViewModel() {
 		viewModelScope.launch {
 			try {
 				val token = AuthStore.getToken(context)
-				val response = repository.getUser(token)
+				val response = repository.getUser(token, userId)
 				_user.value = response.data
 				Log.d("ProfileViewModel", "User: $response")
 			} catch (e: Exception) {
@@ -35,6 +35,7 @@ class ProfileViewModel : ViewModel() {
 			try {
 				val token = AuthStore.getToken(context)
 				val response = repository.unfollowUser(token, userId)
+				_user.value = response.data
 				Log.d("Unfollow", "User: $response")
 			} catch (e: Exception) {
 				Log.e("Unfollow", e.message.toString())
@@ -47,6 +48,7 @@ class ProfileViewModel : ViewModel() {
 			try {
 				val token = AuthStore.getToken(context)
 				val response = repository.followUser(token, userId)
+				_user.value = response.data
 				Log.d("Follow", "User: $response")
 			} catch (e: Exception) {
 				Log.e("Follow", e.message.toString())

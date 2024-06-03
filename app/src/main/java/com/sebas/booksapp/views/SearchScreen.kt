@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +29,8 @@ import androidx.navigation.NavController
 import com.sebas.booksapp.models.Book
 import com.sebas.booksapp.models.User
 import com.sebas.booksapp.viewmodels.SearchViewModel
+import com.sebas.booksapp.views.components.CardBookSearchResult
+import com.sebas.booksapp.views.components.CardUser
 import com.sebas.booksapp.views.components.TopBar
 
 @Composable
@@ -80,7 +83,8 @@ fun SearchContent(
 					}) {
 						Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
 					}
-				}
+				},
+				singleLine = true,
 			)
 		}
 		item {
@@ -102,16 +106,18 @@ fun SearchContent(
 					onClick = {
 						searchViewModel.changeSearchBooksOption(false)
 					})
-				Text(text = "Buscar usuarios")
+				Text(text = "Buscar usuarios(username)")
 			}
 		}
 		if (searchBooksOption) {
 			items(booksResults) { book ->
-				Text(text = book.name)
+				CardBookSearchResult(navController = navController, book = book)
+				Divider()
 			}
 		} else {
 			items(usersResults) { user ->
-				Text(text = user.username)
+				CardUser(navController = navController, user = user)
+				Divider()
 			}
 		}
 	}
