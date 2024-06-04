@@ -1,10 +1,10 @@
 package com.sebas.booksapp.views
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,12 +21,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -48,29 +53,49 @@ fun LoginScreen(
 	navController: NavController,
 	loginViewModel: LoginViewModel = viewModel()
 ) {
+	val isLoading = loginViewModel.isLoading.observeAsState(true)
 	val context = LocalContext.current
 	LaunchedEffect(navController) {
 		loginViewModel.checkToken(navController, context)
 	}
-	val isLoading = loginViewModel.isLoading.observeAsState(true)
-	if (isLoading.value) {
-		LoadingScreen()
-	} else {
-		Login(loginViewModel = loginViewModel, navController = navController)
+	val scope = rememberCoroutineScope()
+	val snackbarHostState = remember { SnackbarHostState() }
+	val loginError: Boolean by loginViewModel.loginError.observeAsState(false)
+	LaunchedEffect(loginError) {
+		if (loginError) {
+			snackbarHostState.showSnackbar("Error al iniciar sesión")
+			loginViewModel.changeLoginError()
+		}
 	}
+	Scaffold(
+		snackbarHost = {
+			SnackbarHost(hostState = snackbarHostState)
+		},
+		content = {
+			if (isLoading.value) {
+				LoadingScreen()
+			} else {
+				Login(
+					modifier = Modifier.padding(it),
+					loginViewModel = loginViewModel,
+					navController = navController
+				)
+			}
+		},
+		containerColor = MaterialTheme.colorScheme.surface
+	)
 }
 
 @Composable
 fun Login(
 	modifier: Modifier = Modifier,
 	loginViewModel: LoginViewModel,
-	navController: NavController
+	navController: NavController,
 ) {
 	val email: String by loginViewModel.email.observeAsState("")
 	val password: String by loginViewModel.password.observeAsState("")
 	val loginEnabled: Boolean by loginViewModel.loginEnabled.observeAsState(false)
 	val passwordVisible: Boolean by loginViewModel.passwordVisible.observeAsState(false)
-	val loginError: Boolean by loginViewModel.loginError.observeAsState(false)
 	val context = LocalContext.current
 
 	Column(
@@ -81,16 +106,19 @@ fun Login(
 			.verticalScroll(rememberScrollState())
 			.safeDrawingPadding(),
 		horizontalAlignment = Alignment.CenterHorizontally,
-		verticalArrangement = Arrangement.spacedBy(16.dp)
+		verticalArrangement = Arrangement.Center
 	) {
-		IconApp(75)
+		IconApp()
+		Spacer(modifier = Modifier.padding(10.dp))
 		EmailTextField(email) { loginViewModel.onLoginChange(it, password) }
+		Spacer(modifier = Modifier.padding(10.dp))
 		PasswordTextField(
 			password,
 			passwordVisible,
 			{ loginViewModel.onLoginChange(email, it) },
 			{ loginViewModel.onPasswordVisibleChange(!passwordVisible) }
 		)
+		Spacer(modifier = Modifier.padding(10.dp))
 		Row(
 			modifier = Modifier.fillMaxWidth(),
 			horizontalArrangement = Arrangement.SpaceBetween,
@@ -98,13 +126,10 @@ fun Login(
 			RegisterLink(navController)
 			ForgotPassword(navController)
 		}
+		Spacer(modifier = Modifier.padding(10.dp))
 		LoginButton(loginEnabled) {
 			loginViewModel.login(navController, context)
 		}
-	}
-	if (loginError) {
-		Toast.makeText(context, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
-		loginViewModel.changeLoginError()
 	}
 }
 

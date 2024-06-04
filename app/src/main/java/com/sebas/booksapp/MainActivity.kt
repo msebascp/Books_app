@@ -10,8 +10,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.BlurOn
+import androidx.compose.material.icons.filled.BookmarkAdd
+import androidx.compose.material.icons.filled.CollectionsBookmark
+import androidx.compose.material.icons.filled.Reviews
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.WatchLater
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -23,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -70,12 +82,20 @@ fun Menu(drawerState: DrawerState, navController: NavHostController) {
 	val scope = rememberCoroutineScope()
 	ModalDrawerSheet {
 		Row(
-			modifier = Modifier.fillMaxWidth(),
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 16.dp),
 			horizontalArrangement = Arrangement.Center
 		) {
 			IconApp(width = 75)
 		}
 		NavigationDrawerItem(
+			icon = {
+				Icon(
+					imageVector = Icons.Default.AccountCircle,
+					contentDescription = "Perfil"
+				)
+			},
 			label = { Text(text = "Perfil") },
 			selected = false,
 			onClick = {
@@ -84,14 +104,12 @@ fun Menu(drawerState: DrawerState, navController: NavHostController) {
 			}
 		)
 		NavigationDrawerItem(
-			label = { Text(text = "Buscar") },
-			selected = false,
-			onClick = {
-				navController.navigate("searchScreen")
-				scope.launch { drawerState.close() }
-			}
-		)
-		NavigationDrawerItem(
+			icon = {
+				Icon(
+					imageVector = Icons.Default.BlurOn,
+					contentDescription = "Buscar"
+				)
+			},
 			label = { Text(text = "Popular") },
 			selected = false,
 			onClick = {
@@ -100,6 +118,26 @@ fun Menu(drawerState: DrawerState, navController: NavHostController) {
 			}
 		)
 		NavigationDrawerItem(
+			icon = {
+				Icon(
+					imageVector = Icons.Default.Search,
+					contentDescription = "Buscar"
+				)
+			},
+			label = { Text(text = "Buscar") },
+			selected = false,
+			onClick = {
+				navController.navigate("searchScreen")
+				scope.launch { drawerState.close() }
+			}
+		)
+		NavigationDrawerItem(
+			icon = {
+				Icon(
+					imageVector = Icons.Default.BookmarkAdd,
+					contentDescription = "Leídos"
+				)
+			},
 			label = { Text(text = "Leídos") },
 			selected = false,
 			onClick = {
@@ -108,6 +146,12 @@ fun Menu(drawerState: DrawerState, navController: NavHostController) {
 			}
 		)
 		NavigationDrawerItem(
+			icon = {
+				Icon(
+					imageVector = Icons.Default.WatchLater,
+					contentDescription = "Leídos"
+				)
+			},
 			label = { Text(text = "Por leer") },
 			selected = false,
 			onClick = {
@@ -116,6 +160,12 @@ fun Menu(drawerState: DrawerState, navController: NavHostController) {
 			}
 		)
 		NavigationDrawerItem(
+			icon = {
+				Icon(
+					imageVector = Icons.Default.CollectionsBookmark,
+					contentDescription = "Leídos"
+				)
+			},
 			label = { Text(text = "Colección") },
 			selected = false,
 			onClick = {
@@ -124,6 +174,12 @@ fun Menu(drawerState: DrawerState, navController: NavHostController) {
 			}
 		)
 		NavigationDrawerItem(
+			icon = {
+				Icon(
+					imageVector = Icons.Default.Reviews,
+					contentDescription = "Leídos"
+				)
+			},
 			label = { Text(text = "Reseñas") },
 			selected = false,
 			onClick = {
@@ -133,6 +189,12 @@ fun Menu(drawerState: DrawerState, navController: NavHostController) {
 		)
 		val context = LocalContext.current
 		NavigationDrawerItem(
+			icon = {
+				Icon(
+					imageVector = Icons.AutoMirrored.Default.Logout,
+					contentDescription = "Leídos"
+				)
+			},
 			label = { Text(text = "Cerrar sesión") },
 			selected = false,
 			onClick = {

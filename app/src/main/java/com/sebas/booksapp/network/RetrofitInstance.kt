@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
-	private const val BASE_URL = "https://monkfish-app-vkbvf.ondigitalocean.app/api/"
+	private const val BASE_URL = "http://10.0.2.2:8000/api/"
 
 	private val client: OkHttpClient by lazy {
 		OkHttpClient.Builder()
@@ -22,4 +22,4 @@ object RetrofitInstance {
 			.build()
 			.create(ApiInterface::class.java)
 	}
-}/*A*/
+}

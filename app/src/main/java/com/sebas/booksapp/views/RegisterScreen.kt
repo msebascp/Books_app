@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FilledTonalButton
@@ -45,7 +47,9 @@ fun RegisterScreen(
 		modifier = Modifier
 			.fillMaxHeight()
 			.fillMaxWidth()
-			.padding(16.dp),
+			.padding(16.dp)
+			.safeDrawingPadding()
+			.statusBarsPadding(),
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.spacedBy(16.dp)
 	) {

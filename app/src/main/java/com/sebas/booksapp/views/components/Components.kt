@@ -35,9 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -183,8 +185,15 @@ fun CardReviewUser(
 }
 
 @Composable
-fun ButtonItemProfile(ruta: String, navController: NavController, textButton: String) {
+fun ButtonItemProfile(
+	ruta: String,
+	navController: NavController,
+	textButton: String,
+	iconButton: ImageVector
+) {
 	TextButton(
+		modifier = Modifier
+			.fillMaxWidth(),
 		colors = ButtonDefaults.textButtonColors(
 			contentColor = MaterialTheme.colorScheme.onBackground
 		),
@@ -192,7 +201,20 @@ fun ButtonItemProfile(ruta: String, navController: NavController, textButton: St
 			navController.navigate(ruta)
 		}
 	) {
-		Text(textButton)
+		Row(
+			horizontalArrangement = Arrangement.Start,
+			modifier = Modifier.fillMaxWidth()
+		) {
+			Icon(
+				imageVector = iconButton,
+				contentDescription = "Icono Botón",
+				modifier = Modifier.padding(end = 8.dp)
+			)
+			Text(
+				text = textButton,
+				textAlign = TextAlign.Start,
+			)
+		}
 	}
 }
 

@@ -10,6 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.CollectionsBookmark
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Reviews
+import androidx.compose.material.icons.filled.WatchLater
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.MaterialTheme
@@ -136,37 +142,43 @@ fun ProfileContent(
 			Column(
 				modifier = Modifier
 					.fillMaxWidth(),
-				verticalArrangement = Arrangement.spacedBy(8.dp)
+				verticalArrangement = Arrangement.spacedBy(8.dp),
 			) {
 				ButtonItemProfile(
 					ruta = "readListScreen?userId=${user?.id}",
 					navController = navController,
-					textButton = "Libros leídos"
-				)
-				ButtonItemProfile(
-					ruta = "collectionListScreen?userId=${user?.id}",
-					navController = navController,
-					textButton = "Colección"
+					textButton = "Libros leídos",
+					iconButton = Icons.Default.Bookmark
 				)
 				ButtonItemProfile(
 					ruta = "watchListScreen?userId=${user?.id}",
 					navController = navController,
-					textButton = "Libros por leer"
+					textButton = "Libros por leer",
+					iconButton = Icons.Default.WatchLater
+				)
+				ButtonItemProfile(
+					ruta = "collectionListScreen?userId=${user?.id}",
+					navController = navController,
+					textButton = "Colección",
+					iconButton = Icons.Default.CollectionsBookmark
 				)
 				ButtonItemProfile(
 					ruta = "reviewsScreen?userId=${user?.id}",
 					navController = navController,
-					textButton = "Reseñas"
+					textButton = "Reseñas",
+					iconButton = Icons.Default.Reviews
 				)
 				ButtonItemProfile(
 					ruta = "followersScreen/${user?.id}",
 					navController = navController,
-					textButton = "Seguidores"
+					textButton = "Seguidores",
+					iconButton = Icons.Default.Person
 				)
 				ButtonItemProfile(
 					ruta = "followingScreen/${user?.id}",
 					navController = navController,
-					textButton = "Siguiendo"
+					textButton = "Siguiendo",
+					iconButton = Icons.Default.Person
 				)
 			}
 		}

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -177,6 +178,7 @@ fun SheetContent(
 		modifier = Modifier
 			.padding(16.dp)
 			.fillMaxWidth()
+			.fillMaxHeight(),
 	) {
 		Row(
 			modifier = Modifier
