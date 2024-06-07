@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.BookmarkAdd
@@ -39,12 +41,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.sebas.booksapp.models.BookDetail
 import com.sebas.booksapp.viewmodels.BookDetailViewModel
+import com.sebas.booksapp.views.components.CardReviewBook
 import com.sebas.booksapp.views.components.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +74,7 @@ fun BookDetailScreen(
 			TopBar(navController = navController, drawerState, scope, true)
 		},
 		content = { paddingValues ->
-			BookDetailContent(paddingValues, book)
+			BookDetailContent(paddingValues, book, navController)
 			if (showBottomSheet) {
 				ModalBottomSheet(
 					onDismissRequest = {
@@ -94,7 +98,11 @@ fun BookDetailScreen(
 }
 
 @Composable
-fun BookDetailContent(paddingValues: PaddingValues, book: BookDetail?) {
+fun BookDetailContent(
+	paddingValues: PaddingValues,
+	book: BookDetail?,
+	navController: NavController
+) {
 	LazyColumn(
 		contentPadding = paddingValues
 	) {
@@ -118,19 +126,20 @@ fun BookDetailContent(paddingValues: PaddingValues, book: BookDetail?) {
 						verticalArrangement = Arrangement.SpaceAround
 					) {
 						Text(
-							book?.name ?: "",
+							text = book?.name ?: "",
 							softWrap = true,
+							style = MaterialTheme.typography.titleLarge,
 						)
 						if (book != null) {
 							Text(
 								book.authors.joinToString { it.name },
 								softWrap = true,
 							)
-						}
-						if (book != null) {
 							Text(
 								book.categories.joinToString { it.name },
 								softWrap = true,
+								style = MaterialTheme.typography.labelLarge,
+								fontStyle = FontStyle.Italic
 							)
 						}
 					}
@@ -156,9 +165,23 @@ fun BookDetailContent(paddingValues: PaddingValues, book: BookDetail?) {
 		item {
 			Text(
 				text = book?.description ?: "",
-				modifier = Modifier.padding(16.dp),
+				modifier = Modifier
+					.padding(16.dp),
 				softWrap = true,
 			)
+		}
+		item {
+			Text(
+				text = "Reseñas",
+				modifier = Modifier.padding(horizontal = 16.dp),
+				style = MaterialTheme.typography.titleMedium,
+			)
+		}
+		items(book?.reviews ?: emptyList()) { review ->
+			CardReviewBook(navController, review)
+		}
+		item {
+			Spacer(modifier = Modifier.height(70.dp))
 		}
 	}
 }
@@ -170,7 +193,7 @@ fun SheetContent(
 	bookDetailViewModel: BookDetailViewModel,
 	navController: NavController
 ) {
-	var enabledButton: Boolean = true
+	var enabledButton = true
 	if (book?.is_read == false) {
 		enabledButton = false
 	}

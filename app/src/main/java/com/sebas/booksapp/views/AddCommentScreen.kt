@@ -4,6 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Scaffold
@@ -53,6 +57,9 @@ fun AddCommentContent(
 			.fillMaxWidth()
 			.padding(paddingValues)
 			.padding(16.dp)
+			.verticalScroll(rememberScrollState())
+			.statusBarsPadding()
+			.safeDrawingPadding(),
 	) {
 		TextField(
 			value = comment,

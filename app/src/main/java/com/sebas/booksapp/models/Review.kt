@@ -10,4 +10,5 @@ data class Review(
 	val updated_at: String,
 	val user_id: Int,
 	val book: Book,
+	val user: User?
 )

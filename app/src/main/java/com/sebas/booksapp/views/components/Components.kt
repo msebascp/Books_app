@@ -387,3 +387,34 @@ fun IconApp(width: Int = 150) {
 	)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CardReviewBook(navController: NavController, review: Review) {
+	Card(
+		onClick = {
+			navController.navigate("readBookDetailScreen/${review.book_id}?userId=${review.user_id}")
+		},
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(16.dp),
+		colors = CardDefaults.cardColors(
+			containerColor = Color.Transparent,
+		),
+		shape = RectangleShape
+	) {
+		Column(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(8.dp)
+		) {
+			if (review.user != null) {
+				CardUserMini(user = review.user)
+			}
+			Text(
+				text = review.content,
+				maxLines = 2,
+				overflow = TextOverflow.Ellipsis,
+			)
+		}
+	}
+}

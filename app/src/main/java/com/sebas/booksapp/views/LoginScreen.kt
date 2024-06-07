@@ -102,8 +102,8 @@ fun Login(
 		modifier = modifier
 			.fillMaxHeight()
 			.padding(horizontal = 16.dp)
-			.statusBarsPadding()
 			.verticalScroll(rememberScrollState())
+			.statusBarsPadding()
 			.safeDrawingPadding(),
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.Center

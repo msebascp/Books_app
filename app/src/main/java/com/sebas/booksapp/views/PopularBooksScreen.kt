@@ -6,9 +6,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,11 +29,13 @@ fun PopularBooksScreen(
 	navController: NavController,
 	popularBooksViewModel: PopularBooksViewModel = viewModel(),
 ) {
-	popularBooksViewModel.getBooks(LocalContext.current)
-	val isLoading by popularBooksViewModel.isLoading.observeAsState(true)
 	val books by popularBooksViewModel.books.observeAsState(emptyList())
+	val context = LocalContext.current
+	LaunchedEffect(context) {
+		popularBooksViewModel.getBooks(context)
+	}
+	val isLoading by popularBooksViewModel.isLoading.observeAsState(true)
 	val scope = rememberCoroutineScope()
-
 
 	Scaffold(
 		topBar = {

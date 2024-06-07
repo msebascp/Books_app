@@ -12,5 +12,6 @@ data class BookDetail(
 	val in_collectionlist: Boolean,
 	val authors: List<Author>,
 	val categories: List<Category>,
+	val reviews: List<Review>,
 	val description: String,
 )
